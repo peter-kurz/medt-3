@@ -48,7 +48,9 @@
 									echo "</td>";
 									for ($i = 0; $i < $_POST['num'];$i++) 
 									{
-										echo "<td>event {$o}.{$i}</td>";
+										$output1 = $o + 1;
+										$output2 = $i + 1;
+										echo "<td>event {$output1}.{$output2}</td>";
 									}
 								echo "</tr>";
 							}
