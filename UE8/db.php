@@ -12,10 +12,17 @@
 				$host = 'localhost';
 				$dbname = 'medt3';
 				$user = 'htluser';
-				$pwd = 'htluser';
-				
+				$pwd = 'htluser2';
+				try {
 				$db = new PDO ( "mysql:host=$host;dbname=$dbname", $user, $pwd);
-				if ($db == true)
+				}
+				catch (PDOException $e) {
+					echo "PDO Exception aufgetreten.<br><br>";
+					echo $e;
+					echo "<br><br>";
+					$db = false;
+				}
+				if ($db)
 					echo "Datenbank Zugriff erfolgreich";
 				else
 					echo "Datenbank Zugriff nicht erfolgreich";
