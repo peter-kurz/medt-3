@@ -16,9 +16,9 @@
 				
 				$db = new PDO ( "mysql:host=$host;dbname=$dbname", $user, $pwd);
 				if ($db == true)
-					echo "true";
+					echo "Datenbank Zugriff erfolgreich";
 				else
-					echo "false";
+					echo "Datenbank Zugriff nicht erfolgreich";
 			?>
 		</div>
 	</body>
