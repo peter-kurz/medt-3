@@ -4,6 +4,9 @@
 					if(isset($_POST['submitBtn'])) {
 						echo '<p>Herzlichen Dank für ihre Anfrage! Aufgrund des derzeitigen Anfragevolumens kann die Beantwortung Ihrer Anfrage längere Zeit in Anspruch nehmen. <br>
 						Wir bitten um ihr Verständnis und melden uns sobald wie möglich bei Ihnen.</p><br><br><p>Ihr blueIT-Team</p>';
+						echo "<br>";
+						echo "In Wahrheit is mit den Infos nix passiert. Hier das POST array: <br>";
+						var_dump($_POST);
 					}
 					else {
 						echo '<p>Wir freuen uns auf ihre Anfrage.</p><br>';
@@ -22,4 +25,4 @@
 						echo '</form>';
 					}
 				?>
-			</main>
+</main>
