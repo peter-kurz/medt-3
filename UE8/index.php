@@ -73,7 +73,7 @@
 						if ($_GET['rowCount'] == 1)
 							echo '<p class="bg-success">Die Operation wurde ausgeführt.</p>';
 						else
-							echo '<p class="bg-danger">Die Operation war nicht erfolgreich.</p>';
+							echo '<p class="bg-danger">Die Operation hat keine Zeilen betroffen.</p>';
 					}
 					echo '<table class="table table-hover">';
 					echo "<thead>";
