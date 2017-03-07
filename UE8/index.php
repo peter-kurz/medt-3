@@ -34,7 +34,6 @@
 						if (isset($_POST['submitBtn'])) 
 						{
 							$query = $db->query("UPDATE project SET name=\"".$_POST['name']."\",description=\"".$_POST['desc']."\",createDate=\"".$_POST['createDate']."\" WHERE id=".$_POST['editParam']);
-							$query->execute();
 							$rowCount = $query->rowCount();
 							echo "<script type=\"text/javascript\">
 								window.location = \"index.php?rowCount=$rowCount\";
@@ -60,7 +59,6 @@
 					}
 					else {
 						$query = $db->query("DELETE FROM project WHERE id=".$_GET['deleteParam']);
-						$query->execute();
 						$rowCount = $query->rowCount();
 						echo "<script type=\"text/javascript\">
 							window.location = \"index.php?rowCount=$rowCount\";
