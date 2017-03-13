@@ -33,11 +33,17 @@
 					{
 						if (isset($_POST['submitBtn'])) 
 						{
-							$query = $db->query("UPDATE project SET name=\"".$_POST['name']."\",description=\"".$_POST['desc']."\",createDate=\"".$_POST['createDate']."\" WHERE id=".$_POST['editParam']);
-							$rowCount = $query->rowCount();
-							echo "<script type=\"text/javascript\">
-								window.location = \"index.php?rowCount=$rowCount\";
-								</script>";
+							$query = $db->prepare("UPDATE project SET name=\":name\",description=\":desc\",createDate=\":date\" WHERE id= :id");
+							$query->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
+							$query->bindParam(':desc', $_POST['desc'], PDO::PARAM_STR);
+							$query->bindParam(':date', $_POST['createDate']);
+							$query->bindParam(':id', $_POST['editParam'], PDO::PARAM_INT);
+							$query->execute();
+							if ($query != false)
+								$rowCount = $query->rowCount();
+							//echo "<script type=\"text/javascript\">
+								//window.location = \"index.php?rowCount=$rowCount\";
+								//</script>";
 						}
 						else {
 							$query = $db -> query("SELECT name, description, id, createDate FROM project WHERE id=".$_GET['editParam']);
@@ -58,8 +64,11 @@
 						}
 					}
 					else {
-						$query = $db->query("DELETE FROM project WHERE id=".$_GET['deleteParam']);
-						$rowCount = $query->rowCount();
+						$query = $db->prepare('DELETE FROM project WHERE id= :id');
+						$query->bindParam(':id', $_GET['deleteParam'], PDO::PARAM_INT);
+						$query->execute();
+						if ($query != false)
+							$rowCount = $query->rowCount();
 						echo "<script type=\"text/javascript\">
 							window.location = \"index.php?rowCount=$rowCount\";
 							</script>";
@@ -67,13 +76,14 @@
 				}
 				//else
 				//{
-					echo '<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2><br>';
+					echo '<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2>';
+					echo '<a href="index.php"><span class="glyphicon glyphicon-refresh"></span>Refresh</a>';
 					if (isset($_GET['rowCount']))
 					{
 						if ($_GET['rowCount'] == 1)
-							echo '<span class="label label-success">Die Operation wurde ausgeführt.</span>';
+							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span>';
 						else
-							echo '<span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span>';
+							echo '<br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span>';
 					}
 					echo '<table class="table table-hover">';
 					echo "<thead>";
