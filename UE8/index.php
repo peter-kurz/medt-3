@@ -33,17 +33,12 @@
 					{
 						if (isset($_POST['submitBtn'])) 
 						{
-							$query = $db->prepare("UPDATE project SET name=\":name\",description=\":desc\",createDate=\":date\" WHERE id= :id");
-							$query->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
-							$query->bindParam(':desc', $_POST['desc'], PDO::PARAM_STR);
-							$query->bindParam(':date', $_POST['createDate'], PDO::PARAM_DATE);
-							$query->bindParam(':id', $_POST['editParam'], PDO::PARAM_INT);
-							$query->execute();
+							$query = $db->query("UPDATE project SET name=\"".$_POST['name']."\",description=\"".$_POST['desc']."\",createDate=\"".$_POST['createDate']."\" WHERE id=".$_POST['editParam']);
 							if ($query != false)
 								$rowCount = $query->rowCount();
-							//echo "<script type=\"text/javascript\">
-								//window.location = \"index.php?rowCount=$rowCount\";
-								//</script>";
+							echo "<script type=\"text/javascript\">
+								window.location = \"index.php?rowCount=$rowCount\";
+								</script>";
 						}
 						else {
 							$query = $db -> query("SELECT name, description, id, createDate FROM project WHERE id=".$_GET['editParam']);
@@ -64,9 +59,7 @@
 						}
 					}
 					else {
-						$query = $db->prepare('DELETE FROM project WHERE id= :id');
-						$query->bindParam(':id', $_GET['deleteParam'], PDO::PARAM_INT);
-						$query->execute();
+						$query = $db->query("DELETE FROM project WHERE id=".$_GET['deleteParam']);
 						if ($query != false)
 							$rowCount = $query->rowCount();
 						echo "<script type=\"text/javascript\">
@@ -77,13 +70,12 @@
 				//else
 				//{
 					echo '<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2>';
-					echo '<a href="index.php"><span class="glyphicon glyphicon-refresh"></span>Refresh</a>';
 					if (isset($_GET['rowCount']))
 					{
 						if ($_GET['rowCount'] == 1)
-							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span>';
+							echo '<span class="label label-success">Die Operation wurde ausgeführt.</span>';
 						else
-							echo '<br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span>';
+							echo '<span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span>';
 					}
 					echo '<table class="table table-hover">';
 					echo "<thead>";
