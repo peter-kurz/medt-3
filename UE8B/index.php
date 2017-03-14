@@ -32,7 +32,7 @@
 					{
 						if (isset($_POST['submitBtn'])) 
 						{
-							$query = $db->prepare("UPDATE project SET name=\":name\",description=\":desc\",createDate=\":date\" WHERE id= :id");
+							$query = $db->prepare("UPDATE project SET name=:name,description=:desc,createDate=:date WHERE id= :id");
 							$query->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
 							$query->bindParam(':desc', $_POST['desc'], PDO::PARAM_STR);
 							$query->bindParam(':date', $_POST['createDate']);
@@ -42,7 +42,9 @@
 								$rowCount = $query->rowCount();
 						}
 						else {
-							$query = $db -> query("SELECT name, description, id, createDate FROM project WHERE id=".$_GET['editParam']);
+							$query = $db -> prepare("SELECT name, description, id, createDate FROM project WHERE id=:id");
+							$query -> bindParam(':id',$_GET['editParam'],PDO::PARAM_INT);
+							$query->execute();
 							$data = $query->fetch(PDO::FETCH_OBJ);
 							echo '<h4><span class="glyphicon glyphicon-edit"></span>';
 							echo "Sie bearbeiten das Projekt \"$data->name\".</h4>";
