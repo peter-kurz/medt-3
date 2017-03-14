@@ -36,7 +36,7 @@
 							$query = $db->prepare("UPDATE project SET name=\":name\",description=\":desc\",createDate=\":date\" WHERE id= :id");
 							$query->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
 							$query->bindParam(':desc', $_POST['desc'], PDO::PARAM_STR);
-							$query->bindParam(':date', $_POST['createDate']);
+							$query->bindParam(':date', $_POST['createDate'], PDO::PARAM_DATE);
 							$query->bindParam(':id', $_POST['editParam'], PDO::PARAM_INT);
 							$query->execute();
 							if ($query != false)
