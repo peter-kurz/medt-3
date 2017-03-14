@@ -69,7 +69,7 @@
 				}
 					echo '<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2>';
 					echo '<a href="index.php"><span class="glyphicon glyphicon-refresh"></span>Refresh</a>';
-					if (isset($rowCount)
+					if (isset($rowCount))
 					{
 						if ($rowCount == 1)
 							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span>';
