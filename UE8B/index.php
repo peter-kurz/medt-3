@@ -69,15 +69,46 @@
 							$rowCount = $query->rowCount();
 					}
 				}
+					
+				if (isset($_GET['createProject']) || isset($_POST['createProject']))
+				{
+					if (isset($_POST['createProject'])) 
+					{
+						$query = $db->prepare("INSERT into project (name,description,createDate) VALUES (:name,:description,:createDate");
+						$query->bindParam(':name',$_POST['name'],PDO::PARAM_STR);
+						$query->bindParam(':description',$_POST['desc'],PDO::PARAM_STR);
+						$query->bindParam(':createDate',$_POST['createDate']);
+						$query->execute();
+						if ($query != false)
+							$rowCount = $query->rowCount();
+					}
+					else {
+						echo '<h4><span class="glyphicon glyphicon-tasks"></span>';
+							echo "Sie erstellen ein neues Projekt.</h4>";
+							echo "<form action=\"index.php\" method=\"POST\">";
+								echo '<div class="form-group">';
+								echo "<label>Name <input class=\"form-control\" type=\"text\" name=\"name\" required></label><br>";
+								echo "<label>Description <input class=\"form-control\" type=\"text\" name=\"desc\"></label><br>";
+								echo "<label>Create Date <input class=\"form-control\" type=\"date\" name=\"createDate\"></label><br>";
+								echo '<br><input style="margin-right:20px;" type="submit" name="createProject">';
+								echo "<input name=\"createProject\" value=\"".$_GET['createProject']."\" hidden>";
+								echo '<a href="index.php"><span style="margin-right:5px;" class="glyphicon glyphicon-remove"></span>Abbrechen</a>';
+								echo '</div>';
+						echo "</form><br>";
+					}
+				}
+				
 					echo '<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2>';
-					echo '<a href="index.php"><span class="glyphicon glyphicon-refresh"></span>Refresh</a>';
+					echo '<a href="index.php" class="btn btn-info" role="button"><span class="glyphicon glyphicon-refresh"></span>Refresh</a><br><br>';
+					echo '<a href="index.php?createProject" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-tasks"></span> Neues Projekt erstellen</a>';
 					if (isset($rowCount))
 					{
 						if ($rowCount == 1)
-							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span>';
+							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span><br>';
 						else
-							echo '<br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span>';
+							echo '<br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span><br>';
 					}
+					
 					echo '<table class="table table-hover">';
 					echo "<thead>";
 						echo "<th>Name</th>";
