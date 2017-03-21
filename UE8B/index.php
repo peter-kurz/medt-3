@@ -74,7 +74,7 @@
 				{
 					if (isset($_POST['createProject'])) 
 					{
-						$query = $db->prepare("INSERT into project (name,description,createDate) VALUES (:name,:description,:createDate");
+						$query = $db->prepare("INSERT into project (name,description,createDate) VALUES (:name,:description,:createDate)");
 						$query->bindParam(':name',$_POST['name'],PDO::PARAM_STR);
 						$query->bindParam(':description',$_POST['desc'],PDO::PARAM_STR);
 						$query->bindParam(':createDate',$_POST['createDate']);
@@ -82,7 +82,7 @@
 						if ($query != false)
 							$rowCount = $query->rowCount();
 					}
-					else {
+					else { 
 						echo '<h4><span class="glyphicon glyphicon-tasks"></span>';
 							echo "Sie erstellen ein neues Projekt.</h4>";
 							echo "<form action=\"index.php\" method=\"POST\">";
@@ -104,9 +104,9 @@
 					if (isset($rowCount))
 					{
 						if ($rowCount == 1)
-							echo '<br><span class="label label-success">Die Operation wurde ausgeführt.</span><br>';
+							echo '<br><br><span class="label label-success">Die Operation wurde ausgeführt.</span><br>';
 						else
-							echo '<br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span><br>';
+							echo '<br><br><span class="label label-danger">Die Operation hat keine Zeilen betroffen.</span><br>';
 					}
 					
 					echo '<table class="table table-hover">';
