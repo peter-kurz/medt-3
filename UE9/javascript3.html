@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>getElement + function example</title>
+	</head>
+	<body>
+		<p id="para1" style="cursor:pointer;">Some text</p>
+		<script>
+			document.getElementById("para1").onclick = changeText;
+			function changeText() 
+			{
+				document.getElementById("para1").innerHTML = "Some <b>new</b> text here!";
+			}
+		</script>
+	</body>
+</html>
