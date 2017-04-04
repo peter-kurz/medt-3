@@ -60,7 +60,7 @@
 			<?php echo $page; ?>
 			<a href="index.php?page=<?php echo $page+1; ?>">></a>
 			<a href="index.php?page=<?php echo $maxval; ?>">>></a>
-			<br><form action="#" method="post">
+			<br><form action="index.php?page=<?php echo $page; ?>" method="post">
 				<select name="count" value="<?php echo $count; ?>">
 				  <option value="10">10</option>
 				  <option value="15">15</option>
