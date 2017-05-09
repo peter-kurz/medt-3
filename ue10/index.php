@@ -19,11 +19,11 @@
 			});
 			
 			function editConfirm() {
-				alert("Projekt "+$(this).parent().parent().attr('data-id')+" wird bearbetiet.");
+				alert("Projekt "+$(this).parent().parent().id+" wird bearbetiet.");
 			}
 			
 			function deleteConfirm() {
-				var id = $(this).parent().parent().attr('data-id');
+				var id = $(this).parent().parent().attr('id');
 				if (confirm("Möchten sie das Projekt mit der ID "+id+" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")){
 					var ajaxConfigObj = {
 						url: "http://localhost/medt/ue10", //Default: Aktuelle Seite
@@ -33,9 +33,11 @@
 						success: function(dataFromServer, textStatus, jqXHR){
 							console.log("Server response: "+dataFromServer);
 							if (dataFromServer) {
-								//$($(this).closest("tr")).hide(500);
+								//$($(this).closest("tr")).remove;
 								//$('p[data-id='+id+']').remove();
-								$(this).parents('tr').remove();
+								//$(this).parents('tr').remove();
+								
+								$("#"+id).hide(500);
 								$("#msgbox").text("Projekt gelöscht").removeClass("alert-danger").addClass("alert-success").show(500).delay(2500).hide(500);
 								//Löschen erfolgreich: Zeile aus der Tabelle entfernen (remove oder hide) und Meldung anzeigen (msgbox, css nicht vergessen)
 							}
@@ -158,7 +160,7 @@
 					//$ParamCounter = 1;
 					$query = $db->query("SELECT name, description, createdate, id FROM project");
 					foreach ($query->fetchAll(PDO::FETCH_OBJ) as $item) { //static zugriff in PHP mit '::'!
-						echo "<tr data-id=\"$item->id\">";
+						echo "<tr id=\"$item->id\">";
 							echo "<td>$item->name</td>";
 							echo "<td>$item->description</td>";
 							echo "<td>$item->createdate</td>";
