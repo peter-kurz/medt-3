@@ -1,3 +1,6 @@
+<?php
+	require "api/db.php";
+?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -11,6 +14,7 @@
 			src="https://code.jquery.com/jquery-3.2.1.min.js"
 			integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
 			crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 		<script>
 			$(document).ready(function() {
 				$("#msgbox").hide(); // msgbox verstecken
@@ -19,20 +23,22 @@
 			});
 			
 			function editConfirm() {
-				alert("Projekt "+$(this).parent().parent().id+" wird bearbetiet.");
+				alert("edit");
 			}
 			
 			function deleteConfirm() {
 				var id = $(this).parent().parent().attr('id');
+				$('#deleteModal').modal('show');
 				if (confirm("Möchten sie das Projekt mit der ID "+id+" wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.")){
 					var ajaxConfigObj = {
-						url: "http://localhost/medt/ue10", //Default: Aktuelle Seite
+						url: "http://localhost/medt/ue10/api/trackstar.php", //Default: Aktuelle Seite
+						dataType: "json",
 						type: "get", // type KLEIN SCHREIBEN!!!!!
 						data: "deleteParam=" + id,
 						// data:{data1:xyz,data2:xyz,...}
 						success: function(dataFromServer, textStatus, jqXHR){
-							console.log("Server response: "+dataFromServer);
-							if (dataFromServer) {
+							console.log("Server response: "+dataFromServer.delete);
+							if (dataFromServer.delete) {
 								//$($(this).closest("tr")).remove;
 								//$('p[data-id='+id+']').remove();
 								//$(this).parents('tr').remove();
@@ -58,97 +64,26 @@
 	</head>
 	<body>
 		<div class="container">
-			<?php
-				$host = 'localhost';
-				$dbname = 'medt3';
-				$user = 'htluser';
-				$pwd = 'htluser';
-				try {
-				$db = new PDO ( "mysql:host=$host;dbname=$dbname", $user, $pwd);
-				}
-				catch (PDOException $e) {
-					echo "<strong>PDO Exception aufgetreten.</strong><br>";
-					echo $e->getMessage();
-					echo "<br><br><strong>Datenbankzugriff nicht erfolgreich.</strong>";
-					$db = false;
-					exit();
-				}
-				if (isset($_GET['editParam']) || isset($_POST['editParam']) || isset($_GET['deleteParam']))
-				{
-					if (isset($_GET['editParam']) || isset($_POST['editParam']))
-					{
-						if (isset($_POST['submitBtn'])) 
-						{
-							$query = $db->prepare("UPDATE project SET name=:name,description=:desc,createDate=:date WHERE id= :id");
-							$query->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
-							$query->bindParam(':desc', $_POST['desc'], PDO::PARAM_STR);
-							$query->bindParam(':date', $_POST['createDate']);
-							$query->bindParam(':id', $_POST['editParam'], PDO::PARAM_INT);
-							$query->execute();
-							if ($query != false)
-								$rowCount = $query->rowCount();
-						}
-						else {
-							$query = $db -> prepare("SELECT name, description, id, createDate FROM project WHERE id=:id");
-							$query -> bindParam(':id',$_GET['editParam'],PDO::PARAM_INT);
-							$query->execute();
-							$data = $query->fetch(PDO::FETCH_OBJ);
-							echo '<h4><span class="glyphicon glyphicon-edit"></span>';
-							echo "Sie bearbeiten das Projekt \"$data->name\".</h4>";
-							echo "<p>Projekt-ID: $data->id</p>";
-							echo "<form action=\"index.php\" method=\"POST\">";
-								echo '<div class="form-group">';
-								echo "<input name=\"editParam\" value=\"".$_GET['editParam']."\" hidden>";
-								echo "<label>Name <input class=\"form-control\" type=\"text\" name=\"name\" value=\"".$data->name."\" required></label><br>";
-								echo "<label>Description <input class=\"form-control\" type=\"text\" name=\"desc\" value=\"".$data->description."\"></label><br>";
-								echo "<label>Create Date <input class=\"form-control\" type=\"date\" name=\"createDate\" value=\"".$data->createDate."\"></label><br>";
-								echo '<br><input style="margin-right:20px;" type="submit" name="submitBtn">';
-								echo '<a href="index.php"><span style="margin-right:5px;" class="glyphicon glyphicon-remove"></span>Abbrechen</a>';
-								echo '</div>';
-							echo "</form><br>";
-						}
-					}
-					else {
-						$query = $db->prepare('DELETE FROM project WHERE id= :id');
-						$query->bindParam(':id', $_GET['deleteParam'], PDO::PARAM_INT);
-						$query->execute();
-						if ($query != false)
-							$rowCount = $query->rowCount();
-					}
-				}
-					
-				if (isset($_GET['createProject']) || isset($_POST['createProject']))
-				{
-					if (isset($_POST['createProject'])) 
-					{
-						$query = $db->prepare("INSERT into project (name,description,createDate) VALUES (:name,:description,:createDate)");
-						$query->bindParam(':name',$_POST['name'],PDO::PARAM_STR);
-						$query->bindParam(':description',$_POST['desc'],PDO::PARAM_STR);
-						$query->bindParam(':createDate',$_POST['createDate']);
-						$query->execute();
-						if ($query != false)
-							$rowCount = $query->rowCount();
-					}
-					else { 
-						echo '<h4><span class="glyphicon glyphicon-tasks"></span>';
-							echo "Sie erstellen ein neues Projekt.</h4>";
-							echo "<form action=\"index.php\" method=\"POST\">";
-								echo '<div class="form-group">';
-								echo "<label>Name <input class=\"form-control\" type=\"text\" name=\"name\" required></label><br>";
-								echo "<label>Description <input class=\"form-control\" type=\"text\" name=\"desc\"></label><br>";
-								echo "<label>Create Date <input class=\"form-control\" type=\"date\" name=\"createDate\"></label><br>";
-								echo '<br><input style="margin-right:20px;" type="submit" name="createProject">';
-								echo "<input name=\"createProject\" value=\"".$_GET['createProject']."\" hidden>";
-								echo '<a href="index.php"><span style="margin-right:5px;" class="glyphicon glyphicon-remove"></span>Abbrechen</a>';
-								echo '</div>';
-						echo "</form><br>";
-					}
-				}
-				
-				?>
 				<h2><span class="glyphicon glyphicon-home"></span>Projektübersicht</h2>
 				<!--<p id="msgbox" class="box"></p>-->
 				<div id="msgbox" class="alert" role="alert"></div>
+				<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
+				  <div class="modal-dialog" role="document">
+					<div class="modal-content">
+					  <div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Projekt löschen</h4>
+					  </div>
+					  <div class="modal-body">
+						<p>Möchten sie das Projekt entfernen?</p>
+					  </div>
+					  <div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Nein, abbrechen.</button>
+						<button type="button" class="btn btn-primary">Ja, entfernen.</button>
+					  </div>
+					</div><!-- /.modal-content -->
+				  </div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
 				<table class="table table-hover">
 				<thead>
 					<th>Name</th>
